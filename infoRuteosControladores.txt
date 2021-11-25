@@ -1,0 +1,51 @@
+***RUTEO***
+1) En app.js siempre:
+const express = require('express'); 
+const app = express();
+app.listen(3000, (req,res) => {
+    console.log('Servidor Funcionando');
+})
+app.use(express.static(__dirname + '/public/'));
+
+2) Creamos los archivos con extension js en la carpeta 'routers' ej: main.js, entradas (login, cuenta, terminos y condiciones, contacto,etc), promociones, puntos de venta.
+
+3) En MAIN.JS:
+const express = require('express');
+const path = require ('path');
+const router = express.Router();
+
+Le pego lo que teniamos en app.get y le cambio el app por router:
+router.get('/', (req,res) => {
+        res.sendFile((path.join(__dirname, "../views/home.html")));
+    })
+Y agrego al final para poder exportarlo:
+module.exports = router;
+
+4) Voy a app.js y creo una variable asignandole la ruta desde donde tiene que rutear:
+const mainRouter = require('./routers/main.js')
+y agrego:
+app.use('/', mainRouter); 
+
+HACER ESTO POR CADA ARCHIVO DE RUTAS
+
+***CONTROLADORES***
+1) Dentro de la carpeta controllers, creo un archivo con extension js que se llame igual que el archivo de ruteo+la palabra Controller. Dentro de ese archivo declaro un objeto literal con la propiedad home o index(dependiendo la pagina): y le copio dentro lo que figuraba en main.js router.get despues de '/' la ruta:
+
+const path = require ('path');
+ 
+ const mainController = {
+     home: (req,res) => {
+        res.sendFile((path.join(__dirname, "../views/home.html")));
+    }
+}
+module.exports = mainController;
+
+2) Voy a main.js  y declaro la variable:
+const mainController = require('../controllers/mainController')
+
+y en el espacio que me quedo despues de la ruta le coloco esa variable mainController.home (o index o la pagina que quiera acceder):
+
+router.get('/', mainController.home)
+
+
+
